@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const userModel = require('../models/user-model');
 const ownerModel = require('../models/owner-model');
 
 module.exports = async function (req, res, next) {
@@ -10,13 +9,12 @@ module.exports = async function (req, res, next) {
 
     try {
         let decoded = jwt.verify(req.cookies.token, process.env.JWT_KEY);
-        let user = await userModel.findOne({ email: decoded.email }).select('-password');
         let owner = await ownerModel.findOne({ email: decoded.email }).select('-password');
-        if (!owner && !user) {
+        if (!owner) {
             req.flash("error", "You dont have permission to access this page");
             return res.redirect("/");
         }
-        req.user = user || owner;
+        req.owner = owner;
         next();
     }
     catch (err) {

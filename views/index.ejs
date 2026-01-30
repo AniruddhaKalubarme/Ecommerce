@@ -15,13 +15,13 @@
                         <form autocomplete="off" action="/users/register" method="post">
                             <input
                                 class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="text" placeholder="Full Name" name="fullname">
+                                type="text" placeholder="Full Name" name="fullname" minlength="3" pattern="[A-Za-z]{3,}" required>
                             <input
                                 class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="email" placeholder="Email" name="email">
+                                type="email" placeholder="Email" name="email" required>
                             <input
                                 class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="password" placeholder="Password" name="password">
+                                type="password" placeholder="Password" name="password" minlength="8" required>
                             <input class="px-5 rounded-full py-3 mt-2 bg-blue-500 text-white" type="submit"
                                 value="Create My Account">
                         </form>

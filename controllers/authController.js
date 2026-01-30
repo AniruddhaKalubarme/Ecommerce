@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const userModel = require('../models/user-model');
+const ownerModel = require('../models/owner-model');
 const jwt = require('jsonwebtoken');
 const { genrateToken } = require('../utils/genrateToken');
 
@@ -28,7 +29,7 @@ module.exports.registerUser = async (req, res) => {
                 let token = genrateToken(user);
                 res.cookie("token", token);
 
-                res.send("user created Successfully");
+                res.redirect("/shop");
             });
         })
 
@@ -43,13 +44,14 @@ module.exports.loginUser = async (req, res) => {
     try {
         let { email, password } = req.body;
         let user = await userModel.findOne({ email });
-        if (!user) {
+        let owner = await ownerModel.findOne({ email });
+        if (!user && !owner) {
             return res.status(400).send("User not found");
         }
 
-        let result = await bcrypt.compare(password, user.password);
+        let result = await bcrypt.compare(password, user?.password || owner?.password);
         if (result) {
-            let token = genrateToken(user);
+            let token = genrateToken(user || owner);
             res.cookie("token", token);
             res.redirect("/shop");
         }
@@ -66,4 +68,24 @@ module.exports.loginUser = async (req, res) => {
 module.exports.logout = async (req, res) => {
     await res.clearCookie("token");
     res.redirect("/");
+}
+
+module.exports.ownerRegister = async (req, res) => {
+        let owners = await ownerModel.find();
+
+        if(owners.length>=1) return res.status(500).send("You dont have permission to create Owner!!!");
+
+        const {fullname, email, password} = req.body;
+
+        bcrypt.genSalt(10, function(err, salt) {
+             bcrypt.hash(password, salt, async function(err, hash) {
+
+                let owner = await ownerModel.create({
+                        fullname,
+                        email,
+                        password: hash,
+                })
+                res.status(201).send(owner)
+            });
+        });
 }

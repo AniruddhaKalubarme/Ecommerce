@@ -1,47 +1,58 @@
 <%- include('./partials/header') %>
     <div class="w-full h-screen flex items-start px-20 py-20 gap-10">
         <div class="w-[75%] flex flex-wrap gap-5 overflow-y-auto">
-            <% user.cart.forEach(function(product){ %>
-                <div class="w-[30%] rounded-md overflow-hidden">
-                    <div class="w-full h-80 bg-yellow-500">
-                        <img src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
-                            class="w-full h-full object-contain" alt="">
-                    </div>
-                    <div
-                        class="w-full flex justify-between px-5 py-4 bg-[<%= product.panelcolor %>] text-[<%= product.textcolor %>]">
-                        <h3 class="text-2xl">
-                            <%= product.name %>
-                        </h3>
-                        <div class="flex items-center gap-2">
-                            <i
-                                class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-add-line text-black"></i>
-                            <div class="px-2 py-1 rounded-md bg-white text-black">01</div>
-                            <i
-                                class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-subtract-line text-black"></i>
+            <% if(user.cart.length === 0){ %>
+                <h3 class="text-2xl">Your cart is empty</h3>
+            <% }else{ %>
+            <% user.cart.forEach(function(item){ %>
+                <% let product=item.product; %>
+                    <div class="w-[30%] rounded-md overflow-hidden">
+                        <div class="w-full h-80 bg-yellow-500">
+                            <img src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
+                                class="w-full h-full object-contain" alt="">
+                        </div>
+                        <div
+                            class="w-full flex justify-between px-5 py-4 bg-[<%= product.panelcolor %>] text-[<%= product.textcolor %>]">
+                            <h3 class="text-2xl">
+                                <%= product.name %>
+                            </h3>
+                            <div class="flex items-center gap-2">
+                                <button onclick="location.href='/addToCart/<%= product._id %>?from=cart'">
+                                    <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-add-line text-black"></i>
+                                </button>
+                                <div class="px-2 py-1 rounded-md bg-white text-black">
+                                    <%= item.quantity %>
+                                </div>
+                                <button onclick="location.href='/removeFromCart/<%= product._id %>'">
+                                    <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-subtract-line text-black"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="w-full bg-[<%= product.panelcolor %>] overflow-hidden">
+                            <div class="w-[90%] h-[1px] mx-auto bg-[<%= product.textcolor %>]"></div>
+                        </div>
+                        <div
+                            class="flex items-center justify-between px-5 py-3  bg-[<%= product.panelcolor %>] text-[<%= product.textcolor %>]">
+                            <h4 class="text-lg">Net Total</h4>
+                            <h2 class="text-xl font-bold">₹ <%= Number(product.price) * item.quantity %>
+                            </h2>
                         </div>
                     </div>
-                    <div class="w-full bg-[<%= product.panelcolor %>] overflow-hidden">
-                        <div class="w-[90%] h-[1px] mx-auto bg-[<%= product.textcolor %>]"></div>
-                    </div>
-                    <div
-                        class="flex items-center justify-between px-5 py-3  bg-[<%= product.panelcolor %>] text-[<%= product.textcolor %>]">
-                        <h4 class="text-lg">Net Total</h4>
-                        <h2 class="text-xl font-bold">₹ <%= product.price %>
-                        </h2>
-                    </div>
-                </div>
-                <% }) %>
+                    <% }) %>
+            <% } %>
         </div>
         <div class="w-[25%] items-center justify-center right-4 top-28 bottom-0 z-10 fixed ">
             <h3 class="text-xl">Price Breakdown</h3>
             <div class="px-10 mt-5">
                 <div class="flex mt-2 justify-between">
                     <h4 class="w-fit">Total MRP</h4>
-                    <h4 class="font-semibold text-green-600">₹ <%= total %></h4>
+                    <h4 class="font-semibold text-green-600">₹ <%= total %>
+                    </h4>
                 </div>
                 <div class="flex mt-2 justify-between">
                     <h4 class="w-fit">Discount</h4>
-                    <h4 class="font-semibold text-green-600">₹ <%= discount %></h4>
+                    <h4 class="font-semibold text-green-600">₹ <%= discount %>
+                    </h4>
                 </div>
                 <div class="flex mt-2 justify-between">
                     <h4 class="w-fit">Platform Fee</h4>
@@ -53,9 +64,10 @@
                 </div>
             </div>
             <div class="w-full h-[1px] bg-black mt-10"></div>
-            <div class="flex mt-5 justify-between"> 
+            <div class="flex mt-5 justify-between">
                 <h3 class="w-fit text-xl">Total Amount</h3>
-                <h3 class="font-semibold text-xl text-green-600 pr-8">₹ <%= MRP %></h3>
+                <h3 class="font-semibold text-xl text-green-600 pr-8">₹ <%= MRP + 20%>
+                </h3>
             </div>
             <form action="">
                 <button class="mt-5 w-full bg-green-600 text-white py-2 rounded-md">Checkout</button>

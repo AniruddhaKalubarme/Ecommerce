@@ -13,11 +13,15 @@
     <nav class="w-full flex justify-between px-5 py-3">
         <h3 class="text-xl">Scatch</h3>
         <% var isLoggedIn = typeof isLoggedIn != 'undefined' ? isLoggedIn : true %>
+        <% var own = typeof owner == 'undefined' ? false : owner %>
+        <% console.log(own) %>
         <% if(isLoggedIn){ %>
             <div class="flex gap-5">
                 <a href="/shop">Shop</a>
                 <a href="/cart">Cart</a>
-                <a href="/users/profile">My Account</a>
+                <% if(own){ %>
+                    <a href="/owners/admin">Add a Product</a>
+                <% } %>
                 <a href="/users/logout" class="text-red-600 font-bold">Logout</a>
             </div>
         <% } %>
